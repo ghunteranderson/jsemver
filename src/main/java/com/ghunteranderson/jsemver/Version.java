@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor(access=AccessLevel.PRIVATE)
-public class SemanticVersion {
+public class Version {
 	
 	public static Builder builder(int major, int minor, int patch) {
 		return new Builder(major, minor, patch);
@@ -74,14 +74,14 @@ public class SemanticVersion {
 		}
 		
 		
-		public SemanticVersion build() {
+		public Version build() {
 			if(preReleaseLabel == null)
 				preReleaseLabel = new Label();
 			
 			if(buildLabel == null)
 				buildLabel = new Label();
 			
-			return new SemanticVersion(majorVersion, minorVersion, patchVersion, preReleaseLabel, buildLabel);
+			return new Version(majorVersion, minorVersion, patchVersion, preReleaseLabel, buildLabel);
 		}
 		
 	}

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class SemanticVersionParser {
+public class VersionParser {
 
 	
-	public SemanticVersion parse(CharacterScanner scanner) {
+	public Version parse(CharacterScanner scanner) {
 		// Major version
 		int major = parseNumericIdentifier(scanner);
 		if(scanner.next() != '.')
@@ -21,7 +21,7 @@ public class SemanticVersionParser {
 		// Patch Version
 		int patch = parseNumericIdentifier(scanner);
 		
-		SemanticVersion.Builder builder = SemanticVersion.builder(major, minor, patch);
+		Version.Builder builder = Version.builder(major, minor, patch);
 		
 		if(scanner.peek() ==  '-') {
 			scanner.next();
@@ -100,11 +100,6 @@ public class SemanticVersionParser {
 	// <digit>
 	private boolean isDigit(char c) {
 		return c >= '0' && c <= '9';
-	}
-	
-	// <positive digit>
-	private boolean isPositiveDigit(char c) {
-		return c >= '1' && c <= '9';
 	}
 	
 	// <letter>

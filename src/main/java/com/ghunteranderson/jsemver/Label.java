@@ -11,7 +11,7 @@ public class Label implements Iterable<String>{
 	public Label(List<String> parts) {
 		this.parts = new ArrayList<>(parts.size());
 		for(String part:parts) {
-			if(part != null && !part.isBlank())
+			if(part != null && !part.trim().isEmpty())
 				this.parts.add(part);
 		}
 	}
