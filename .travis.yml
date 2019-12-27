@@ -1,27 +1,12 @@
 language: java
+os: linux
 services:
-- docker
-cache:
-  directories:
-  - "$HOME/.cache"
-
-deploy-snapshot:
-  branches:
-    only:
-      - /^release/.*$/
-  provider: script
-  script: "mvn -s .travis.settings.xm deploy"
-  skip_cleanup: true
-  on:
-    tags: true
-
-
-deploy-release:
-  branches:
+  - docker
+branches:
     only:
       - master
-  provider: script
-  script: "mvn -s .travis.settings.xml version:set -DremoveSnapshot=true && mvn -s .travis.settings.xml deploy"
-  skip_cleanup: true
-  on:
-    tags: true
+      - /^release/.*$/
+
+deploy:
+  provider: script	
+  script: "./.travis.deploy.sh"
