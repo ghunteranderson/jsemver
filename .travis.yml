@@ -1,4 +1,3 @@
-sudo: false
 language: java
 services:
 - docker
@@ -9,9 +8,20 @@ cache:
 deploy-snapshot:
   branches:
     only:
-  	  - /^release/.*$/
+      - /^release/.*$/
   provider: script
   script: "mvn -s .travis.settings.xm deploy"
+  skip_cleanup: true
+  on:
+    tags: true
+
+
+deploy-release:
+  branches:
+    only:
+      - master
+  provider: script
+  script: "mvn -s .travis.settings.xml version:set -DremoveSnapshot=true && mvn -s .travis.settings.xml deploy"
   skip_cleanup: true
   on:
     tags: true
