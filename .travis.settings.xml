@@ -1,0 +1,14 @@
+<settings>
+	<servers>
+		<server>
+			<id>snapshot-repo</id>
+			<username>${env.maven_deploy_username}</username>
+			<password>${env.maven_deploy_password}</password>
+		</server>
+		<server>
+			<id>release-repo</id>
+			<username>${env.maven_deploy_username}</username>
+			<password>${env.maven_deploy_password}</password>
+		</server>
+	</servers>
+</settings>

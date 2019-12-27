@@ -1,0 +1,17 @@
+sudo: false
+language: java
+services:
+- docker
+cache:
+  directories:
+  - "$HOME/.cache"
+
+deploy-snapshot:
+  branches:
+    only:
+  	  - /^release/.*$/
+  provider: script
+  script: "mvn -s .travis.settings.xm deploy"
+  skip_cleanup: true
+  on:
+    tags: true
