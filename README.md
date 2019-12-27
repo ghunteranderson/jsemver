@@ -1,4 +1,8 @@
 # JSemVer
+[![Build Status](https://travis-ci.com/ghunteranderson/jsemver.svg?branch=master)](https://travis-ci.com/ghunteranderson/jsemver)
+[![Coverage Status](https://coveralls.io/repos/github/ghunteranderson/jsemver/badge.svg?branch=master)](https://coveralls.io/github/ghunteranderson/jsemver?branch=master)   
+
+
 JSemVer is a Java based parser and comparator implementing the Semantic Versioning 2.0.0.
 It also includes support for NPM like version range selectors.
 
