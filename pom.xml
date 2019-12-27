@@ -12,6 +12,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 	</properties>
 
 	<build>
@@ -65,6 +66,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.3.0</version>
+				<configuration>
+					<repoToken>${env.COVERALLS_TOKEN}</repoToken>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

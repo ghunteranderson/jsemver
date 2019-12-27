@@ -13,6 +13,9 @@ before_script:
 script:
   - mvn verify
 
+after_success:
+  - mvn coveralls:report
+
 deploy:
   - provider: script
     skip_cleanup: true
