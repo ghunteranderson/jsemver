@@ -6,17 +6,20 @@ import java.util.function.Function;
 
 public class VersionParser {
 
+	public Version parse(String version) {
+		return parse(new CharacterScanner(version));
+	}
 	
-	public Version parse(CharacterScanner scanner) {
+	protected Version parse(CharacterScanner scanner) {
 		// Major version
 		int major = parseNumericIdentifier(scanner);
 		if(scanner.next() != '.')
-			throw new SemanticVersionSyntaxException(scanner.toString());
+			throw new VersionSyntaxException(scanner.toString());
 		
 		// Minor version
 		int minor = parseNumericIdentifier(scanner);
 		if(scanner.next() != '.')
-			throw new SemanticVersionSyntaxException(scanner.toString());
+			throw new VersionSyntaxException(scanner.toString());
 		
 		// Patch Version
 		int patch = parseNumericIdentifier(scanner);
@@ -67,11 +70,11 @@ public class VersionParser {
 		}
 		
 		else
-			throw new SemanticVersionSyntaxException(scanner.toString());
+			throw new VersionSyntaxException("Unexpected character " + c + " in version " + scanner.toString());
 	}
 	
 	private void throwLeftPaddedZerosException(String inputVersion) {
-		throw new SemanticVersionSyntaxException("Numeric identifiers cannot be left padded with zeros: " + inputVersion);
+		throw new VersionSyntaxException("Numeric identifiers cannot be left padded with zeros: " + inputVersion);
 	}
 	
 	private String parsePreReleaseIdentifier(CharacterScanner cs) {

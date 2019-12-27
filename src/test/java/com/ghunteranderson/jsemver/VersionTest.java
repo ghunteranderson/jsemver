@@ -1,9 +1,10 @@
 package com.ghunteranderson.jsemver;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
-public class SemanticVersionTest {
+public class VersionTest {
 
 	@Test
 	public void toString_onlyCoreVersion() {
@@ -48,4 +49,5 @@ public class SemanticVersionTest {
 				.build();
 		assertEquals("1.2.3-alpha.485", version.toString());
 	}
+	
 }

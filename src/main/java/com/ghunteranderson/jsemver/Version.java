@@ -10,18 +10,27 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@RequiredArgsConstructor(access=AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access=AccessLevel.PROTECTED)
 public class Version {
+	
+	public static Version from(String version) {
+		return new VersionParser().parse(version);
+	}
 	
 	public static Builder builder(int major, int minor, int patch) {
 		return new Builder(major, minor, patch);
 	}
+	
 	
 	private final int majorVersion;
 	private final int minorVersion;
 	private final int patchVersion;
 	private final Label preReleaseLabel;
 	private final Label buildLabel;
+	
+	public boolean isPreRelease() {
+		return !preReleaseLabel.isEmpty();
+	}
 	
 	public String toString() {
 		StringBuilder bob = new StringBuilder();

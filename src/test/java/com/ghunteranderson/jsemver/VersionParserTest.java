@@ -3,7 +3,7 @@ package com.ghunteranderson.jsemver;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SemanticVersionParserTest {
+public class VersionParserTest {
 
 	
 	@Test
@@ -42,19 +42,19 @@ public class SemanticVersionParserTest {
 	@Test
 	public void parse_leftPaddedMajorThrowsException() {
 		CharacterScanner cs = new CharacterScanner("01.2.3");
-		assertThrows(SemanticVersionSyntaxException.class, () -> new VersionParser().parse(cs));
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse(cs));
 	}
 	
 	@Test
 	public void parse_leftPaddedMinorThrowsException() {
 		CharacterScanner cs = new CharacterScanner("1.02.3");
-		assertThrows(SemanticVersionSyntaxException.class, () -> new VersionParser().parse(cs));
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse(cs));
 	}
 	
 	@Test
 	public void parse_leftPaddedPatchThrowsException() {
 		CharacterScanner cs = new CharacterScanner("1.2.03");
-		assertThrows(SemanticVersionSyntaxException.class, () -> new VersionParser().parse(cs));
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse(cs));
 	}
 	
 	@Test
@@ -71,7 +71,7 @@ public class SemanticVersionParserTest {
 	@Test
 	public void parse_releaseLabelWithLeftPaddedIdentThrowsException() {
 		CharacterScanner cs = new CharacterScanner("1.2.3-alpha.01");
-		assertThrows(SemanticVersionSyntaxException.class, () -> new VersionParser().parse(cs));
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse(cs));
 	}
 	
 	@Test
@@ -103,7 +103,7 @@ public class SemanticVersionParserTest {
 	@Test
 	public void parse_coreVersionCannotStartWithLetter() {
 		CharacterScanner cs = new CharacterScanner("v1.2.3-alpha.01");
-		assertThrows(SemanticVersionSyntaxException.class, () -> new VersionParser().parse(cs));
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse(cs));
 	}
 
 }

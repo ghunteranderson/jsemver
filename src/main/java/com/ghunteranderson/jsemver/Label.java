@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Label implements Iterable<String>{
 
 	private final List<String> parts;
