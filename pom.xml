@@ -5,7 +5,7 @@
 	<groupId>com.ghunteranderson</groupId>
 	<artifactId>jsemver</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.0.0-SNAPSHOT</version>
 	<name>Jsemver</name>
 	<url>https://ghunteranderson.com</url>
 
@@ -92,4 +92,15 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<distributionManagement>
+		<repository>
+			<id>release-repo</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot-repo</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

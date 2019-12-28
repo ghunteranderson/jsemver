@@ -2,13 +2,13 @@
 	<servers>
 		<server>
 			<id>snapshot-repo</id>
-			<username>${env.maven_deploy_username}</username>
-			<password>${env.maven_deploy_password}</password>
+			<username>${env.MAVEN_DEPLOY_USERNAME}</username>
+			<password>${env.MAVEN_DEPLOY_TOKEN}</password>
 		</server>
 		<server>
 			<id>release-repo</id>
-			<username>${env.maven_deploy_username}</username>
-			<password>${env.maven_deploy_password}</password>
+			<username>${env.MAVEN_DEPLOY_USERNAME}</username>
+			<password>${env.MAVEN_DEPLOY_TOKEN}</password>
 		</server>
 	</servers>
 </settings>
