@@ -3,6 +3,9 @@ package com.ghunteranderson.jsemver;
 import static com.ghunteranderson.jsemver.JoinOperator.*;
 import static com.ghunteranderson.jsemver.RangeOperator.*;
 
+/**
+ * Parse version range based on Jsemver selector syntax
+ */
 class VersionRangeParser {
 	
 	public VersionRange parse(String s) {

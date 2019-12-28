@@ -65,6 +65,10 @@ public class SimpleRange implements VersionRange {
 		return new VersionComparator().compare(input, version);
 	}
 
+	/**
+	 * Builds a range string following Jsemver selector syntax.
+	 * @return reconstructed range following Jsemver selector syntax.
+	 */
 	public String toString() {
 		return operator.getSymbol() + version.toString();
 	}

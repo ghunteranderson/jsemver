@@ -2,6 +2,10 @@ package com.ghunteranderson.jsemver;
 
 import java.util.Comparator;
 
+/**
+ * Comparator for {@link Version} objects following the semanitc version
+ * specification for ordering versions.
+ */
 public class VersionComparator implements Comparator<Version>{
 
 	@Override

@@ -4,8 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class VersionParser {
+/**
+ * Parse version numbers based on semantic version syntax.
+ */
+class VersionParser {
 
+	/**
+	 * Parse version number based on semantic version syntax.
+	 * @param version Version string
+	 * @return Parsed version
+	 * @throws VersionSyntaxException if version cannot be parsed
+	 */
 	public Version parse(String version) {
 		return parse(new CharacterScanner(version));
 	}
