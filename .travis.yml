@@ -6,7 +6,7 @@ services:
   - docker
 
 install:
-  - openssl aes-256-cbc -K $GPG_ENCRYPTION_KEY -in .signing-key.gpg.enc -out signing-key.gpg -d
+  - openssl aes-256-cbc -k $GPG_ENCRYPTION_KEY -in .signing-key.gpg.enc -out signing-key.gpg -d
   - pgp --import signing-key.gpg
   - rm signing-key.gpg
   - cp .travis.settings.xml ${HOME}/.m2/settings.xml
