@@ -2,17 +2,44 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.ghunteranderson</groupId>
 	<artifactId>jsemver</artifactId>
-	<packaging>jar</packaging>
 	<version>0.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
 	<name>Jsemver</name>
+	<description>
+		JSemVer is a Java based parser and comparator implementing the Semantic Versioning 2.0.0. 
+		It also includes support for NPM like version range selectors.
+	</description>
 	<url>https://ghunteranderson.com</url>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>G. Hunter Anderson</name>
+			<email>ghunteranerson@gmail.com</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/ghunteranderson/jsemver.git</connection>
+		<developerConnection>scm:git:ssh://github.com:ghunteranderson/jsemver.git</developerConnection>
+		<url>https://github.com/ghunteranderson/jsemver/tree/master</url>
+	</scm>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
 	</properties>
 
 	<build>
@@ -75,6 +102,31 @@
 					<repoToken>${env.COVERALLS_TOKEN}</repoToken>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>nexus-central</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -92,14 +144,14 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<distributionManagement>
 		<repository>
-			<id>release-repo</id>
+			<id>nexus-central</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>snapshot-repo</id>
+			<id>nexus-central</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
