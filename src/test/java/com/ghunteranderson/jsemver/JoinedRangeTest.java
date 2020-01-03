@@ -80,6 +80,5 @@ public class JoinedRangeTest {
 	})
 	public void toString_parsedVersionCanCreateSameString(String input) {
 		assertEquals(input, VersionRange.from(input).toString());
-		
 	}
 }

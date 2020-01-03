@@ -58,6 +58,12 @@ public class VersionParserTest {
 	}
 	
 	@Test
+	public void parse_leftPaddedPreReleaseThrowsException() {
+		CharacterScanner cs = new CharacterScanner("1.2.3-rc.01");
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse(cs));
+	}
+	
+	@Test
 	public void parse_withPreReleaseLabel() {
 		CharacterScanner cs = new CharacterScanner("1.2.3-alpha.1");
 		Version v = new VersionParser().parse(cs);
@@ -105,5 +111,61 @@ public class VersionParserTest {
 		CharacterScanner cs = new CharacterScanner("v1.2.3-alpha.01");
 		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse(cs));
 	}
-
+	
+	@Test
+	public void parse_justMajorNumberThrowsException() {
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse("5"));
+	}
+	
+	@Test
+	public void parse_justMajorMinorNumberThrowsException() {
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse("1.0"));
+	}
+	
+	// +------------------------------------------------------------------+
+	// |                   Parsing with Strict Disabled                   |
+	// +------------------------------------------------------------------+
+	
+	@Test
+	public void parse_justMajorNumberStrictDisabled() {
+		Version v = new VersionParser().strict(false).parse("5");
+		assertEquals(5, v.getMajorVersion());
+		assertEquals(0, v.getMinorVersion());
+		assertEquals(0, v.getPatchVersion());
+		assertTrue(v.getPreReleaseLabel().isEmpty());
+		assertTrue(v.getBuildLabel().isEmpty());
+	}
+	
+	@Test
+	public void parse_justMajorMinorNumberStrictDisabled() {
+		Version v = new VersionParser().strict(false).parse("5.2");
+		assertEquals(5, v.getMajorVersion());
+		assertEquals(2, v.getMinorVersion());
+		assertEquals(0, v.getPatchVersion());
+		assertTrue(v.getPreReleaseLabel().isEmpty());
+		assertTrue(v.getBuildLabel().isEmpty());
+	}
+	
+	@Test
+	public void parse_leftPaddedCoreVersionStrictDisabled() {
+		Version v = new VersionParser().strict(false).parse("005.0002.0006");
+		assertEquals(5, v.getMajorVersion());
+		assertEquals(2, v.getMinorVersion());
+		assertEquals(6, v.getPatchVersion());
+		assertTrue(v.getPreReleaseLabel().isEmpty());
+		assertTrue(v.getBuildLabel().isEmpty());
+	}
+	
+	@Test
+	public void parse_leftPaddedPreReleaseStrictDisabled() {
+		CharacterScanner cs = new CharacterScanner("1.2.3-rc.01");
+		Version v = new VersionParser().strict(false).parse(cs);
+		assertEquals(1, v.getMajorVersion());
+		assertEquals(2, v.getMinorVersion());
+		assertEquals(3, v.getPatchVersion());
+		assertEquals("rc", v.getPreReleaseLabel().getPart(0));
+		assertEquals("1", v.getPreReleaseLabel().getPart(1));
+		assertEquals(2, v.getPreReleaseLabel().size());
+	}
+	
 }
