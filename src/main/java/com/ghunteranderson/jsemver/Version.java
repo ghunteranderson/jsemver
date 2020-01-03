@@ -33,7 +33,7 @@ public class Version {
 	 * @return
 	 */
 	public static Version from(String version, boolean strict) {
-		return new VersionParser().parse(version);
+		return new VersionParser().strict(strict).parse(version);
 	}
 	
 	/**
