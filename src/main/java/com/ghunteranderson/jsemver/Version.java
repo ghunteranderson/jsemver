@@ -30,7 +30,8 @@ public class Version {
 	 * @param version Semantic version string
 	 * @param strict When true, parser fails on any invalid syntax. 
 	 * When false, parser will allow some common version syntax discrepancies.
-	 * @return
+	 * @return Parsed version
+	 * @throws VersionSyntaxException if version string cannot be parsed.
 	 */
 	public static Version from(String version, boolean strict) {
 		return new VersionParser().strict(strict).parse(version);
