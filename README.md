@@ -123,3 +123,5 @@ parse the version despite syntax errors. Leniency was added for missing
 minor/patch numbers and left padding zeros where not allowed. Parsing version
 ranges will continue to use strict parsing since these are typically within
 the control of the users of this library.
+1. Fixed bug where versions without labels could end with letters and not throw
+an exception.
