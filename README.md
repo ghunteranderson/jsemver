@@ -112,3 +112,16 @@ VersionRange joinedRange = new JoinedRange(range1, JoinOperator.INTERSECTION, ra
 
 boolean valid = joinedRange.contains(version);
 ```
+
+## Change Log
+### 0.1.0
+1. Adding strict flag to version parser. I've found that JSemVer will need to 
+parse versions that are outside the control of the libraries user and those 
+versions may not strictly follow SemVer syntax. I've added 
+`Version.from("1.0", false)` which disables strict parsing and attempts to
+parse the version despite syntax errors. Leniency was added for missing 
+minor/patch numbers and left padding zeros where not allowed. Parsing version
+ranges will continue to use strict parsing since these are typically within
+the control of the users of this library.
+1. Fixed bug where versions without labels could end with letters and not throw
+an exception.

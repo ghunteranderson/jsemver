@@ -15,13 +15,26 @@ import lombok.RequiredArgsConstructor;
 public class Version {
 	
 	/**
-	 * Parse the semantic version string.
+	 * Parse the semantic version string with strict syntax enforced.
+	 * Seen {@link #from(String, boolean)}
 	 * @param version Semantic version string
 	 * @return Parsed version
 	 * @throws VersionSyntaxException if version string cannot be parsed
 	 */
 	public static Version from(String version) {
 		return new VersionParser().parse(version);
+	}
+	
+	/**
+	 * Parse the semantic version string.
+	 * @param version Semantic version string
+	 * @param strict When true, parser fails on any invalid syntax. 
+	 * When false, parser will allow some common version syntax discrepancies.
+	 * @return Parsed version
+	 * @throws VersionSyntaxException if version string cannot be parsed.
+	 */
+	public static Version from(String version, boolean strict) {
+		return new VersionParser().strict(strict).parse(version);
 	}
 	
 	/**

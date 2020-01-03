@@ -5,12 +5,12 @@
 
 	<groupId>com.ghunteranderson</groupId>
 	<artifactId>jsemver</artifactId>
-	<version>0.0.0-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Jsemver</name>
+	<name>JSemVer</name>
 	<description>
-		JSemVer is a Java based parser and comparator implementing the Semantic Versioning 2.0.0. 
+		JSemVer is a Java based parser and comparator implementing the Semantic Versioning 2.0.0.
 		It also includes support for NPM like version range selectors.
 	</description>
 	<url>https://ghunteranderson.com</url>
@@ -94,39 +94,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.eluder.coveralls</groupId>
-				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>4.3.0</version>
-				<configuration>
-					<repoToken>${env.COVERALLS_TOKEN}</repoToken>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>nexus-central</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -155,4 +122,53 @@
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+	<profiles>
+		<profile>
+			<id>CI</id>
+			<activation>
+				<property>
+					<name>env.CI</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eluder.coveralls</groupId>
+						<artifactId>coveralls-maven-plugin</artifactId>
+						<version>4.3.0</version>
+						<configuration>
+							<repoToken>${env.COVERALLS_TOKEN}</repoToken>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>nexus-central</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

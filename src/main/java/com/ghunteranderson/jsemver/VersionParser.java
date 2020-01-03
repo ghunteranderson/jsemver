@@ -8,6 +8,32 @@ import java.util.function.Function;
  * Parse version numbers based on semantic version syntax.
  */
 class VersionParser {
+	
+	private boolean strict = true;
+	
+	/**
+	 * Access strict parsing flag.
+	 * By default strict parsing is enabled.
+	 * When enabled, parser fails on any invalid syntax. 
+	 * When disabled, parser will allow some common version syntax discrepancies.
+	 * @return true if strict parsing is enabled.
+	 */
+	public boolean strict() {
+		return strict;
+	}
+	
+	/**
+	 * Set if strict parsing is enabled. 
+	 * By default strict parsing is disabled.
+	 * When enabled, parser fails on any invalid syntax. 
+	 * When disabled, parser will allow some common version syntax discrepancies.
+	 * @param strict true if strict parsing is enabled.
+	 * @return the same VersionParser for chained method calls
+	 */
+	public VersionParser strict(boolean strict) {
+		this.strict = strict;
+		return this;
+	}
 
 	/**
 	 * Parse version number based on semantic version syntax.
@@ -20,20 +46,7 @@ class VersionParser {
 	}
 	
 	protected Version parse(CharacterScanner scanner) {
-		// Major version
-		int major = parseNumericIdentifier(scanner);
-		if(scanner.next() != '.')
-			throw new VersionSyntaxException(scanner.toString());
-		
-		// Minor version
-		int minor = parseNumericIdentifier(scanner);
-		if(scanner.next() != '.')
-			throw new VersionSyntaxException(scanner.toString());
-		
-		// Patch Version
-		int patch = parseNumericIdentifier(scanner);
-		
-		Version.Builder builder = Version.builder(major, minor, patch);
+		Version.Builder builder = parseCoreVersion(scanner);
 		
 		if(scanner.peek() ==  '-') {
 			scanner.next();
@@ -45,7 +58,50 @@ class VersionParser {
 			builder.buildLabel(parseLabel(scanner, this::parseBuildIdentifier));
 		}
 		
+		if(isIdentifierCharacter(scanner.peek()))
+			throw new VersionSyntaxException("Expected end but found " + scanner.peek() + " on version " + scanner);
+		
 		return builder.build();
+	}
+	
+	private Version.Builder parseCoreVersion(CharacterScanner scanner) {
+		// Major version
+		int major = parseNumericIdentifier(scanner);
+		if(scanner.peek() == '.') {
+			scanner.next();
+		}
+		else {
+			// Lenient parsing allows just a major version
+			if(!strict && isCoreVersionEarlyTerminationCharacter(scanner.peek()))
+				return Version.builder(major, 0, 0);
+			else
+				throw new VersionSyntaxException(scanner.toString());
+		}
+		
+		// Minor version
+		int minor = parseNumericIdentifier(scanner);
+		if(scanner.peek() == '.') {
+			scanner.next();
+		}
+		else {
+			// Lenient parsing allows major.minor as a version
+			if(!strict && isCoreVersionEarlyTerminationCharacter(scanner.peek()))
+				return Version.builder(major, minor, 0);
+			else
+				throw new VersionSyntaxException(scanner.toString());
+		}
+		
+		// Patch Version
+		int patch = parseNumericIdentifier(scanner);
+		
+		return Version.builder(major, minor, patch);
+	}
+	
+	private boolean isCoreVersionEarlyTerminationCharacter(char c) {
+		return c == '-'      // Core version ended early to start prerelease label
+				|| c == '+'  // Core version ended early to start build label
+				|| c == ' '  // Core version ended early to continue version range
+				|| c == '\0';// Core version ended early. No more characters.
 	}
 	
 	
@@ -63,8 +119,8 @@ class VersionParser {
 	// <numeric identifier>
 	private int parseNumericIdentifier(CharacterScanner scanner) {
 		String digits = parseDigits(scanner);
-		if(digits.startsWith("0") && digits.length() > 1)
-			throwLeftPaddedZerosException(scanner.toString());
+		if(strict && digits.startsWith("0") && digits.length() > 1)
+			throw leftPaddedZerosException(scanner.toString());
 		return Integer.parseInt(digits);
 	}
 
@@ -82,8 +138,8 @@ class VersionParser {
 			throw new VersionSyntaxException("Unexpected character " + c + " in version " + scanner.toString());
 	}
 	
-	private void throwLeftPaddedZerosException(String inputVersion) {
-		throw new VersionSyntaxException("Numeric identifiers cannot be left padded with zeros: " + inputVersion);
+	private VersionSyntaxException leftPaddedZerosException(String inputVersion) {
+		return new VersionSyntaxException("Numeric identifiers cannot be left padded with zeros: " + inputVersion);
 	}
 	
 	private String parsePreReleaseIdentifier(CharacterScanner cs) {
@@ -96,8 +152,15 @@ class VersionParser {
 		}
 		
 		String ident = bob.toString();
-		if(!alphaReached && ident.startsWith("0") && ident.length() > 1)
-			throwLeftPaddedZerosException(cs.toString());
+		if(!alphaReached && ident.length() > 1) {
+			// Strict parsing doesn't allow left padding zeros
+			// If strict is disabled, correct the label part to be correct
+			if(strict && ident.startsWith("0"))
+				throw leftPaddedZerosException(cs.toString());
+			else
+				ident = ident.replaceAll("^0+", "");
+			
+		}
 		return ident;
 	}
 	

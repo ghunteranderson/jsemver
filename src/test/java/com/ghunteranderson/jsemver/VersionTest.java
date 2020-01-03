@@ -1,6 +1,8 @@
 package com.ghunteranderson.jsemver;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,5 +51,17 @@ public class VersionTest {
 				.build();
 		assertEquals("1.2.3-alpha.485", version.toString());
 	}
+	
+	@Test
+	public void toString_strictIsEnabledByDefault() {
+		assertThrows(VersionSyntaxException.class, () -> Version.from("1.2"));
+	}
+	
+	@Test
+	public void toString_strictCanBeDisabled() {
+		assertNotNull(Version.from("1.2", false));
+	}
+	
+	
 	
 }
