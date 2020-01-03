@@ -122,6 +122,33 @@ public class VersionParserTest {
 		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse("1.0"));
 	}
 	
+	
+	@Test
+	public void parse_majorNumberCannotHaveLetters() {
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse("13a.0.0"));
+	}
+	
+	@Test
+	public void parse_minorNumberCannotHaveLetters() {
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse("13.0a.0"));
+	}
+	
+	@Test
+	public void parse_patchNumberCannotHaveLetters() {
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse("13.0.0a"));
+		assertThrows(VersionSyntaxException.class, () -> new VersionParser().parse("13.0.0a-alpha"));
+	}
+	
+	@Test
+	public void parse_snapshot() {
+		Version v = Version.from("1.2.3-20200101.203040-1");
+		assertEquals(1, v.getMajorVersion());
+		assertEquals(2, v.getMinorVersion());
+		assertEquals(3, v.getPatchVersion());
+		assertEquals("20200101", v.getPreReleaseLabel().getPart(0));
+		assertEquals("203040-1", v.getPreReleaseLabel().getPart(1));
+	}
+	
 	// +------------------------------------------------------------------+
 	// |                   Parsing with Strict Disabled                   |
 	// +------------------------------------------------------------------+
@@ -154,6 +181,42 @@ public class VersionParserTest {
 		assertEquals(6, v.getPatchVersion());
 		assertTrue(v.getPreReleaseLabel().isEmpty());
 		assertTrue(v.getBuildLabel().isEmpty());
+	}
+	
+	@Test
+	public void parse_leftPaddedMajorWithPreReleaseStrictDisabled() {
+		Version v = new VersionParser().strict(false).parse("06-alpha");
+		assertEquals(6, v.getMajorVersion());
+		assertEquals(0, v.getMinorVersion());
+		assertEquals(0, v.getPatchVersion());
+		assertEquals("alpha", v.getPreReleaseLabel().getPart(0));
+	}
+	
+	@Test
+	public void parse_leftPaddedMinorWithPreReleaseStrictDisabled() {
+		Version v = new VersionParser().strict(false).parse("6.07-alpha");
+		assertEquals(6, v.getMajorVersion());
+		assertEquals(7, v.getMinorVersion());
+		assertEquals(0, v.getPatchVersion());
+		assertEquals("alpha", v.getPreReleaseLabel().getPart(0));
+	}
+	
+	@Test
+	public void parse_leftPaddedMajorWithBuildLabelStrictDisabled() {
+		Version v = new VersionParser().strict(false).parse("06+alpha");
+		assertEquals(6, v.getMajorVersion());
+		assertEquals(0, v.getMinorVersion());
+		assertEquals(0, v.getPatchVersion());
+		assertEquals("alpha", v.getBuildLabel().getPart(0));
+	}
+	
+	@Test
+	public void parse_leftPaddedMinorWithBuildLabelStrictDisabled() {
+		Version v = new VersionParser().strict(false).parse("6.07+alpha");
+		assertEquals(6, v.getMajorVersion());
+		assertEquals(7, v.getMinorVersion());
+		assertEquals(0, v.getPatchVersion());
+		assertEquals("alpha", v.getBuildLabel().getPart(0));
 	}
 	
 	@Test

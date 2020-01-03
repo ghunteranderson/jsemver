@@ -46,37 +46,7 @@ class VersionParser {
 	}
 	
 	protected Version parse(CharacterScanner scanner) {
-		// Major version
-		int major = parseNumericIdentifier(scanner);
-		if(scanner.peek() == '.') {
-			scanner.next();
-		}
-		else {
-			// Lenient parsing allows just a major version
-			if(!strict && (scanner.peek() == ' ' || scanner.peek() == '\0'))
-				return Version.builder(major, 0, 0).build();
-			else
-				throw new VersionSyntaxException(scanner.toString());
-		}
-		
-		// Minor version
-		int minor = parseNumericIdentifier(scanner);
-		if(scanner.peek() == '.') {
-			scanner.next();
-		}
-		else {
-			// Lenient parsing allows major.minor as a version
-			if(!strict && (scanner.peek() == ' '  || scanner.peek() == '\0'))
-				return Version.builder(major, minor, 0).build();
-			else
-				throw new VersionSyntaxException(scanner.toString());
-		}
-		
-		// Patch Version
-		int patch = parseNumericIdentifier(scanner);
-		
-		
-		Version.Builder builder = Version.builder(major, minor, patch);
+		Version.Builder builder = parseCoreVersion(scanner);
 		
 		if(scanner.peek() ==  '-') {
 			scanner.next();
@@ -88,7 +58,50 @@ class VersionParser {
 			builder.buildLabel(parseLabel(scanner, this::parseBuildIdentifier));
 		}
 		
+		if(isIdentifierCharacter(scanner.peek()))
+			throw new VersionSyntaxException("Expected end but found " + scanner.peek() + " on version " + scanner);
+		
 		return builder.build();
+	}
+	
+	private Version.Builder parseCoreVersion(CharacterScanner scanner) {
+		// Major version
+		int major = parseNumericIdentifier(scanner);
+		if(scanner.peek() == '.') {
+			scanner.next();
+		}
+		else {
+			// Lenient parsing allows just a major version
+			if(!strict && isCoreVersionEarlyTerminationCharacter(scanner.peek()))
+				return Version.builder(major, 0, 0);
+			else
+				throw new VersionSyntaxException(scanner.toString());
+		}
+		
+		// Minor version
+		int minor = parseNumericIdentifier(scanner);
+		if(scanner.peek() == '.') {
+			scanner.next();
+		}
+		else {
+			// Lenient parsing allows major.minor as a version
+			if(!strict && isCoreVersionEarlyTerminationCharacter(scanner.peek()))
+				return Version.builder(major, minor, 0);
+			else
+				throw new VersionSyntaxException(scanner.toString());
+		}
+		
+		// Patch Version
+		int patch = parseNumericIdentifier(scanner);
+		
+		return Version.builder(major, minor, patch);
+	}
+	
+	private boolean isCoreVersionEarlyTerminationCharacter(char c) {
+		return c == '-'      // Core version ended early to start prerelease label
+				|| c == '+'  // Core version ended early to start build label
+				|| c == ' '  // Core version ended early to continue version range
+				|| c == '\0';// Core version ended early. No more characters.
 	}
 	
 	
